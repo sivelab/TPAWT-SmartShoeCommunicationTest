@@ -64,8 +64,8 @@ public class Navigation : MonoBehaviour {
 	private float virtualCenterMassHeight=0;//the distance between the feet and the VCM initially
 	private float leftFootRealHeight=0;//the distance between the floor and the foot initially
 	private float rightFootRealHeight=0;//the distance between the floor and the foot initially
-	private float leftFootVirtualX =0;//used to avoid sliding along walls
-	private float rightFootVirtualX =0;//used to avoid sliding along walls
+	//private float leftFootVirtualX =0;//used to avoid sliding along walls
+	//private float rightFootVirtualX =0;//used to avoid sliding along walls
 	
 	//WIP v1 Variables
 	public float height; // the height of the user
@@ -458,8 +458,8 @@ public class Navigation : MonoBehaviour {
 		//sets a base height to be tested against for feet raising
 		leftFootRealHeight = realFloor.position.y - leftFootReal.position.y ;
 		rightFootRealHeight = realFloor.position.y - rightFootReal.position.y ;
-		leftFootVirtualX = leftFootVirtual.localPosition.x;
-		rightFootVirtualX = rightFootVirtual.localPosition.x;
+		//leftFootVirtualX = leftFootVirtual.localPosition.x;
+		//rightFootVirtualX = rightFootVirtual.localPosition.x;
 		
 		//Create clones of the virtual feet that will mimic where the real feet should be
 		leftFootVirtualClone = (Transform)Instantiate(leftFootVirtual);

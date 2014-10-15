@@ -25,7 +25,7 @@ public class ServerUDP : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		port = 2050;
-
+		leftShoeProximityData = new Queue();
 
 		
    }	
@@ -78,7 +78,7 @@ public class ServerUDP : MonoBehaviour {
 
 	private bool testing = false;
 	private int trialNumber = -1;
-	private string serverStatus = "";
+	//private string serverStatus = "";
 	void OnGUI(){
 		GUI.TextField(new Rect(450, 10, 100, 20), "Receiving Port", 25,testStyles);
 		port = Convert.ToInt32(GUI.TextField(new Rect(550, 10, 60, 20), port.ToString(), 25));
@@ -130,18 +130,17 @@ public class ServerUDP : MonoBehaviour {
 		GUI.TextField(new Rect(600, 205, 100, 20), "right Pressure: "+rightShoePressure,testStyles);
 		GUI.TextField(new Rect(600, 225, 100, 20), "packets received: "+packetsReceived,testStyles);
 		
-		if(GUI.Button(new Rect(450, 10, 600, 600), "packets received: "+packetsReceived))
-		{
-			Debug.Log ("TEST");
-		}
+
 	}
 
 	//float pastTime = 0;
 	private int packetsReceived = 0;
+	private int leftShoeProximityIterator=0;
+	public Queue leftShoeProximityData;
 	private void ReceiveData()
 	{
 		client = new UdpClient(port);
-		float pastTime = 0;
+//		float pastTime = 0;
 		while (true)
 		{
 			try{
@@ -171,17 +170,26 @@ public class ServerUDP : MonoBehaviour {
 						if (testStr[0] == '0')//left
 						{
 							leftShoeValveStatus = testStr.Substring(1);
+							//takes the 4th and 5th bytes and converts them to a 2 byte int
 							leftShoeProximity = BitConverter.ToInt16(data,4).ToString();
+							leftShoeProximityData.Enqueue(Convert.ToInt32(leftShoeProximity));
+							leftShoeProximityIterator = (leftShoeProximityIterator + 1) % 100;
 						}
 						//if the first bit is 1, it is the right foot
 						else//right
 						{
 							rightShoeValveStatus = testStr.Substring(1);
+							//takes the 4th and 5th bytes and converts them to a 2 byte int
 							rightShoeProximity = BitConverter.ToInt16(data,4).ToString();
 							Debug.Log ( rightShoeProximity);
 						}
 					}
 
+				}
+
+				foreach ( int x in leftShoeProximityData)
+				{
+					Debug.Log ("Que?" + x);
 				}
 				/*
 				for (int i =0; i < stringArray.Length; i ++)

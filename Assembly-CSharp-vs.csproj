@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{8932BF6B-4519-3795-A40B-12DCA347E54C}</ProjectGuid>
+	<ProjectGuid>{E4C4D2D0-10AF-73B2-1561-78D7693DCEDF}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -50,6 +50,7 @@
      <Compile Include="Assets\CreateBodyLines.cs" />
      <Compile Include="Assets\GetSlope.cs" />
      <Compile Include="Assets\Getvariedheights.cs" />
+     <Compile Include="Assets\Grapher.cs" />
      <Compile Include="Assets\HUDFPS.cs" />
      <Compile Include="Assets\Kinect\Scripts\BodySourceManager.cs" />
      <Compile Include="Assets\KinectPointManV2.cs" />
@@ -64,12 +65,12 @@
      <Compile Include="Assets\UDPSendPacket.cs" />
      <Compile Include="Assets\quit.cs" />
  <Reference Include="Assembly-UnityScript-firstpass">
- <HintPath>E:/Code/Unity/SimpleShoeCommunication/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
+ <HintPath>E:/Code/Unity/shoeCommunication/shoeCommunication/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass-vs.csproj">
-      <Project>{30E38834-45B2-A21B-62A0-F7041BF90157}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
+      <Project>{F2D8BFEC-85F8-B56A-FE8E-18B0AF474143}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

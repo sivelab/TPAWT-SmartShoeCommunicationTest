@@ -273,7 +273,7 @@ public class UDPSendPacket : MonoBehaviour {
 		if (GUI.Button(new Rect(190,300+y,110,20), ("# of Trials =" + numberOfTrials),tet.button))
 	    {
 			numberOfTrials=(numberOfTrials + 1) % 120;
-			int iterations = numberOfTrials / 5;
+//			int iterations = numberOfTrials / 5;
 			//
 			list = new int[numberOfTrials];
 			for (int i = 0; i < numberOfTrials; i++)
@@ -409,6 +409,7 @@ public class UDPSendPacket : MonoBehaviour {
 			}
 			catch (Exception e){
 				statusBar = "FAILED WRITING TO FILE, INVALID FILE NAME PERHAPS??????? Get a good name and try again, otherwize ???";
+				Debug.LogError(e.ToString());
 				testing = false;
 				return;
 			}
@@ -426,6 +427,7 @@ public class UDPSendPacket : MonoBehaviour {
 				System.IO.File.AppendAllText(trialFile, trialData + "\r\n");
 			}
 			catch (Exception e){
+				Debug.LogError(e.ToString());
 				statusBar = "It failed again??? HOW DID IT PAST THE FIRST TEST. SNEAKY HACKER.";
 				testing = false;
 				return;
@@ -566,7 +568,6 @@ public class UDPSendPacket : MonoBehaviour {
 	//returns true if the two lists are equal
 	bool listCompare(int[] a, int[] b)
 	{
-		bool returnBool = true;
 		if (a.Length != b.Length)
 		{
 			Debug.LogError("lists not the same length");

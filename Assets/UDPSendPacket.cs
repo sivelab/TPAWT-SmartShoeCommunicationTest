@@ -550,7 +550,7 @@ public class UDPSendPacket : MonoBehaviour {
 					*/
 				}
 			}
-			//printList(tmpList);
+			printList(tmpList);
 			listDict[i] = tmpList;
 		}
 		//reassemble one final list from the smaller ones

@@ -25,7 +25,8 @@ public class ServerUDP : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		port = 2050;
-		leftShoeProximityData = new Queue();
+		leftShoeProximityData = new float[7];
+		rightShoeProximityData = new float[7];
 
 		
    }	
@@ -136,7 +137,8 @@ public class ServerUDP : MonoBehaviour {
 	//float pastTime = 0;
 	private int packetsReceived = 0;
 	private int leftShoeProximityIterator=0;
-	public Queue leftShoeProximityData;
+	public  float[] leftShoeProximityData;
+	public  float[] rightShoeProximityData;
 	private void ReceiveData()
 	{
 		client = new UdpClient(port);
@@ -167,13 +169,60 @@ public class ServerUDP : MonoBehaviour {
 						testStr = testStr.PadLeft(8,'0');
 						//if the first bit is 0, it is the left foot
 						Debug.Log ("first bit: " + testStr[0] + " wholething: " + testStr);
+						// [0] - 24 header
+						// [3] - valve state
+						// [4] - 16 prox. 1
+						// [6] - 32 pres. 1
+						//6 bytes acc
+
+						// [16] - 16 prox. 1
+						// [18] - 32 pres. 1
+						//6 bytes acc
+
+
+						// [28] - 16 prox. 1
+						// [30] - 32 pres. 1
+						//6 bytes acc
+
+
+						// [40] - 16 prox. 1
+						// [42] - 32 pres. 1
+						//6 bytes acc
+
+
+						// [52] - 16 prox. 1
+						// [54] - 32 pres. 1
+						//6 bytes acc
+
+
+						// [64] - 16 prox. 1
+						// [66] - 32 pres. 1
+						//6 bytes acc
+
+
+						// [76] - 16 prox. 1
+						// [78] - 32 pres. 1
+						//6 bytes acc
+						//85 bytes totes
+						
 						if (testStr[0] == '0')//left
 						{
 							leftShoeValveStatus = testStr.Substring(1);
 							//takes the 4th and 5th bytes and converts them to a 2 byte int
 							leftShoeProximity = BitConverter.ToInt16(data,4).ToString();
-							leftShoeProximityData.Enqueue(Convert.ToInt32(leftShoeProximity));
-							leftShoeProximityIterator = (leftShoeProximityIterator + 1) % 100;
+							leftShoeProximityData[0]=(Convert.ToInt16(leftShoeProximity));
+							leftShoeProximity = BitConverter.ToInt16(data,16).ToString();
+							leftShoeProximityData[1]=(Convert.ToInt16(leftShoeProximity));
+							leftShoeProximity = BitConverter.ToInt16(data,28).ToString();
+							leftShoeProximityData[2]=(Convert.ToInt16(leftShoeProximity));
+							leftShoeProximity = BitConverter.ToInt16(data,40).ToString();
+							leftShoeProximityData[3]=(Convert.ToInt16(leftShoeProximity));
+							leftShoeProximity = BitConverter.ToInt16(data,52).ToString();
+							leftShoeProximityData[4]=(Convert.ToInt16(leftShoeProximity));
+							leftShoeProximity = BitConverter.ToInt16(data,64).ToString();
+							leftShoeProximityData[5]=(Convert.ToInt16(leftShoeProximity));
+							leftShoeProximity = BitConverter.ToInt16(data,76).ToString();
+							leftShoeProximityData[6]=(Convert.ToInt16(leftShoeProximity));
 						}
 						//if the first bit is 1, it is the right foot
 						else//right
@@ -181,16 +230,25 @@ public class ServerUDP : MonoBehaviour {
 							rightShoeValveStatus = testStr.Substring(1);
 							//takes the 4th and 5th bytes and converts them to a 2 byte int
 							rightShoeProximity = BitConverter.ToInt16(data,4).ToString();
-							Debug.Log ( rightShoeProximity);
+							rightShoeProximityData[0]=(Convert.ToInt16(rightShoeProximity));
+							rightShoeProximity = BitConverter.ToInt16(data,16).ToString();
+							rightShoeProximityData[1]=(Convert.ToInt16(rightShoeProximity));
+							rightShoeProximity = BitConverter.ToInt16(data,28).ToString();
+							rightShoeProximityData[2]=(Convert.ToInt16(rightShoeProximity));
+							rightShoeProximity = BitConverter.ToInt16(data,40).ToString();
+							rightShoeProximityData[3]=(Convert.ToInt16(rightShoeProximity));
+							rightShoeProximity = BitConverter.ToInt16(data,52).ToString();
+							rightShoeProximityData[4]=(Convert.ToInt16(rightShoeProximity));
+							rightShoeProximity = BitConverter.ToInt16(data,64).ToString();
+							rightShoeProximityData[5]=(Convert.ToInt16(rightShoeProximity));
+							rightShoeProximity = BitConverter.ToInt16(data,76).ToString();
+							rightShoeProximityData[6]=(Convert.ToInt16(rightShoeProximity));
 						}
 					}
 
 				}
 
-				foreach ( int x in leftShoeProximityData)
-				{
-					Debug.Log ("Que?" + x);
-				}
+
 				/*
 				for (int i =0; i < stringArray.Length; i ++)
 				{

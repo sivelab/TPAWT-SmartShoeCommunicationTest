@@ -43,6 +43,7 @@ public class ServerUDP : MonoBehaviour {
 	}
 	// Update is called once per frame
 	public float globalTime;
+	private string debugString = "Debug String";
 	void Update () {
 		globalTime = Time.time;
 		testing = udpSendPacket.getTesting();
@@ -79,7 +80,7 @@ public class ServerUDP : MonoBehaviour {
 
 	private bool testing = false;
 	private int trialNumber = -1;
-	//private string serverStatus = "";
+	private string serverStatus = "";
 	void OnGUI(){
 		GUI.TextField(new Rect(450, 10, 100, 20), "Receiving Port", 25,testStyles);
 		port = Convert.ToInt32(GUI.TextField(new Rect(550, 10, 60, 20), port.ToString(), 25));
@@ -131,7 +132,8 @@ public class ServerUDP : MonoBehaviour {
 		GUI.TextField(new Rect(600, 205, 100, 20), "right Pressure: "+rightShoePressure,testStyles);
 		GUI.TextField(new Rect(600, 225, 100, 20), "packets received: "+packetsReceived,testStyles);
 		
-
+		
+		debugString = GUI.TextField(new Rect(580, 335, 20, 20), debugString,testStyles);
 	}
 
 	//float pastTime = 0;
@@ -142,7 +144,7 @@ public class ServerUDP : MonoBehaviour {
 	private void ReceiveData()
 	{
 		client = new UdpClient(port);
-//		float pastTime = 0;
+		float pastTime = 0;
 		while (true)
 		{
 			try{
@@ -210,6 +212,7 @@ public class ServerUDP : MonoBehaviour {
 							leftShoeValveStatus = testStr.Substring(1);
 							//takes the 4th and 5th bytes and converts them to a 2 byte int
 							leftShoeProximity = BitConverter.ToInt16(data,4).ToString();
+
 							leftShoeProximityData[0]=(Convert.ToInt16(leftShoeProximity));
 							leftShoeProximity = BitConverter.ToInt16(data,16).ToString();
 							leftShoeProximityData[1]=(Convert.ToInt16(leftShoeProximity));
@@ -227,21 +230,29 @@ public class ServerUDP : MonoBehaviour {
 						//if the first bit is 1, it is the right foot
 						else//right
 						{
+							debugString = "";
 							rightShoeValveStatus = testStr.Substring(1);
 							//takes the 4th and 5th bytes and converts them to a 2 byte int
 							rightShoeProximity = BitConverter.ToInt16(data,4).ToString();
+							debugString += "1 : " + rightShoeProximity;
 							rightShoeProximityData[0]=(Convert.ToInt16(rightShoeProximity));
 							rightShoeProximity = BitConverter.ToInt16(data,16).ToString();
+							debugString += "2 : " + rightShoeProximity;
 							rightShoeProximityData[1]=(Convert.ToInt16(rightShoeProximity));
 							rightShoeProximity = BitConverter.ToInt16(data,28).ToString();
+							debugString += "3 : " + rightShoeProximity;
 							rightShoeProximityData[2]=(Convert.ToInt16(rightShoeProximity));
 							rightShoeProximity = BitConverter.ToInt16(data,40).ToString();
+							debugString += "4 : " + rightShoeProximity;
 							rightShoeProximityData[3]=(Convert.ToInt16(rightShoeProximity));
 							rightShoeProximity = BitConverter.ToInt16(data,52).ToString();
+							debugString += "5 : " + rightShoeProximity;
 							rightShoeProximityData[4]=(Convert.ToInt16(rightShoeProximity));
 							rightShoeProximity = BitConverter.ToInt16(data,64).ToString();
+							debugString += "6 : " + rightShoeProximity;
 							rightShoeProximityData[5]=(Convert.ToInt16(rightShoeProximity));
 							rightShoeProximity = BitConverter.ToInt16(data,76).ToString();
+							debugString += "7 : " + rightShoeProximity;
 							rightShoeProximityData[6]=(Convert.ToInt16(rightShoeProximity));
 						}
 					}
@@ -310,7 +321,7 @@ public class ServerUDP : MonoBehaviour {
 
 				//Debug.Log("dl:"+data.Length + " " + (globalTime-pastTime));
 				//pastTime = globalTime;
-
+				*/
 				if (startRecording)
 				{
 					System.IO.File.AppendAllText(writeLocationLeft, "globalTime:"+globalTime+"  timeDifference:"+(globalTime-pastTime)+"   "+stringData+ "\r\n");
@@ -328,7 +339,7 @@ public class ServerUDP : MonoBehaviour {
 						serverStatus = "tried and failed to save testing data.  Perhaps bad file location?";
 					}
 				}
-*/
+
 			}
 			catch(Exception e){
 				Debug.LogError(e);

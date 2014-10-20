@@ -12,6 +12,7 @@ public class Grapher : MonoBehaviour {
 	public GUIStyle testStyles;
 	private float lastTime=0;
 	public int shoeValve = -1;//must set in editor , 0-6 for left foot,  7-13 for right foot
+	private string debugString;
 	// Use this for initialization
 	void Start () {
 		CreatePoints();
@@ -68,7 +69,8 @@ public class Grapher : MonoBehaviour {
 		//x/80000  8000/.10=x
 	}
 	void OnGUI(){
-		GUI.Button(new Rect(580, 315, 20, 20), "Shoe Pressure Data  (left,  right)",testStyles);
+		GUI.Button(new Rect(580, 315, 20, 20), "Shoe Proximity Data  (left,  right)",testStyles);
+		GUI.Button(new Rect(580, 335, 20, 20), debugString,testStyles);
 
 		for (int i = 0; i < 7; i++)
 		{

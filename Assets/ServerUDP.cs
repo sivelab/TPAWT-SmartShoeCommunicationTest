@@ -94,7 +94,7 @@ public class ServerUDP : MonoBehaviour {
 	private bool testing = false;
 	private int trialNumber = -1;
 	private string serverStatus = "";
-	public bool metronome = true;
+	public bool metronome = false;
 	public AudioClip clip;
 	private float clipEnd; // declare this outside any function
 

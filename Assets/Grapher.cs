@@ -46,12 +46,21 @@ public class Grapher : MonoBehaviour {
 		float newData = 0;
 		if (shoeValve > -1 && shoeValve< 7) // left foot
 		{
-
-			newData = ((SUDP.leftShoeProximityData[shoeValve] - 2000) / 80000);
+			//70,000 - 150,000
+			// 0 - .10
+			// x - 70000  =   0 - 80,0000
+			// 800,000/x = .10
+			//x = 800,000
+			newData = ((SUDP.rightShoePressureData[shoeValve] - 70000) / 800000);
 		}
 		else if (shoeValve > 6 && shoeValve < 14) //right foot
 		{
 			newData = ((SUDP.rightShoeProximityData[shoeValve-7] - 2000) / 80000);
+			//2,000-10,000 >>
+			//0    - .10
+			//x-2000  = 0-8000
+			//x/80000  8000/.10=x
+
 		}
 		else
 		{
@@ -63,13 +72,10 @@ public class Grapher : MonoBehaviour {
 		if (newData < 0)
 			newData = 0f;
 		points[resolution-1].position = new Vector3((resolution-1)*increment,0f,newData);
-		//2,000-10,000 >>
-		//0    - .10
-		//x-2000  = 0-8000
-		//x/80000  8000/.10=x
+	
 	}
 	void OnGUI(){
-		GUI.Button(new Rect(580, 315, 20, 20), "Shoe Proximity Data  (left,  right)",testStyles);
+		GUI.Button(new Rect(580, 315, 20, 20), "Shoe Pressure Data (left) Shoe Proximity Data  (right)",testStyles);
 
 		for (int i = 0; i < 7; i++)
 		{

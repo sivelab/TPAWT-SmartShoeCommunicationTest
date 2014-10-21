@@ -27,11 +27,13 @@ public class ServerUDP : MonoBehaviour {
 		port = 2050;
 		leftShoeProximityData = new float[7];
 		rightShoeProximityData = new float[7];
-		/*
-		byte[] test = new Byte[]{16,8};
-		short test2 = ToInt16(test,0);
+		leftShoePressureData = new float[7];
+		rightShoePressureData = new float[7];
+
+		byte[] test = new Byte[]{0,0,16,8};
+		int test2 = ToInt32(test,0);
 		Debug.Log("test: " + test2);
-		*/
+
    }	
 	
 	void startServer()
@@ -136,6 +138,8 @@ public class ServerUDP : MonoBehaviour {
 	private int leftShoeProximityIterator=0;
 	public  float[] leftShoeProximityData;
 	public  float[] rightShoeProximityData;
+	public  float[] leftShoePressureData;
+	public  float[] rightShoePressureData;
 	private void ReceiveData()
 	{
 		client = new UdpClient(port);
@@ -217,6 +221,16 @@ public class ServerUDP : MonoBehaviour {
 						//if the first bit is 1, it is the right foot
 						else//right
 						{
+
+							rightShoePressureData[0] = ToInt32(data,6);
+							rightShoePressureData[1] = ToInt32(data,18);
+							rightShoePressureData[2] = ToInt32(data,30);
+							rightShoePressureData[3] = ToInt32(data,42);
+							rightShoePressureData[4] = ToInt32(data,54);
+							rightShoePressureData[5] = ToInt32(data,66);
+							rightShoePressureData[6] = ToInt32(data,78);
+
+
 							debugString = "";
 							rightShoeValveStatus = testStr.Substring(1);
 							//takes the 4th and 5th bytes and converts them to a 2 byte int
@@ -227,10 +241,7 @@ public class ServerUDP : MonoBehaviour {
 							rightShoeProximityData[4] = ToInt16(data,52);
 							rightShoeProximityData[5] = ToInt16(data,64);
 							rightShoeProximityData[6] = ToInt16(data,76);
-							for (int i = 0; i < rightShoeProximityData.Length; i++)
-							{
-								debugString+= " " + i + " : " + rightShoeProximityData[i]; 
-							}
+
 						}
 					}
 
@@ -345,24 +356,17 @@ public class ServerUDP : MonoBehaviour {
 		result = (short)(result << 8);
 		result += (short) value[startIndex + 1];
 		return result;
-		/*
-		if (startIndex % 2 == 0)
-		{
-			result = *(short*)(&value [startIndex]);
-		}
-		else
-		{
-			if (BitConverter.IsLittleEndian)
-			{
-				result = (short)((int)(*(&value [startIndex])) | (int)(&value [startIndex]) [(IntPtr)1 / 1] << 8);
-			}
-			else
-			{
-				result = (short)((int)(*(&value [startIndex])) << 8 | (int)(&value [startIndex]) [(IntPtr)1 / 1]);
-			}
-		}
-		return result;
-		*/
 	}
-
+	public static int ToInt32(byte[] value, int startIndex)
+	{
+		int result = 0;
+		result = (int) value[startIndex];
+		result = (int)(result << 8);
+		result += (int) value[startIndex + 1];
+		result = (int)(result << 8);
+		result += (int) value[startIndex + 2];
+		result = (int)(result << 8);
+		result += (int) value[startIndex + 3];
+		return result;
+	}
 }

@@ -125,16 +125,7 @@ public class ServerUDP : MonoBehaviour {
 
 	
 		GUI.TextField(new Rect(450, 205, 100, 20), "right Valve: "+rightShoeValveStatus,testStyles);
-		GUI.TextField(new Rect(450, 225, 100, 20), "left Prox: "+leftShoeProximity,testStyles);
-		
-		
-		GUI.TextField(new Rect(450, 245, 100, 20), "right Prox: "+rightShoeProximity,testStyles);
-
-		GUI.TextField(new Rect(600, 185, 100, 20), "left Pressure : "+leftShoePressure,testStyles);
-		
-		
-		GUI.TextField(new Rect(600, 205, 100, 20), "right Pressure: "+rightShoePressure,testStyles);
-		GUI.TextField(new Rect(600, 225, 100, 20), "packets received: "+packetsReceived,testStyles);
+		GUI.TextField(new Rect(450, 225, 100, 20), "packets received: "+packetsReceived,testStyles);
 		
 		
 		debugString = GUI.TextField(new Rect(580, 335, 20, 20), debugString,testStyles);

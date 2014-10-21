@@ -28,12 +28,12 @@ public class ServerUDP : MonoBehaviour {
 		rightShoeProximityData = new float[7];
 		leftShoePressureData = new float[7];
 		rightShoePressureData = new float[7];
-		/*
+
 		byte[] test = new Byte[]{127,127,127,127};
 		//int test2 = ToInt32(test,0);
-		bool test2 = isSet(test, 31);
+		bool test2 = isSet(test, 25);
 		Debug.Log("test: " + test2);
-*/
+
    }	
 	
 	void startServer()
@@ -176,6 +176,17 @@ public class ServerUDP : MonoBehaviour {
 							testStr = testStr.PadLeft(8,'0');
 							rightShoeValveStatus = testStr.Substring(1);
 							Debug.Log ("first bit: " + testStr[0] + " wholething: " + testStr);
+							//takes the 4th and 5th bytes and converts them to a 2 byte int
+							rightShoeProximityData[0] = ToInt16(data,4);
+							rightShoeProximityData[1] = ToInt16(data,16);
+							rightShoeProximityData[2] = ToInt16(data,28);
+							rightShoeProximityData[3] = ToInt16(data,40);
+							rightShoeProximityData[4] = ToInt16(data,52);
+							rightShoeProximityData[5] = ToInt16(data,64);
+							rightShoeProximityData[6] = ToInt16(data,76);
+
+
+							//takes the 6th ,7th, 8th and 9th bytes and converts them to a 4 byte int
 							rightShoePressureData[0] = ToInt32(data,6);
 							rightShoePressureData[1] = ToInt32(data,18);
 							rightShoePressureData[2] = ToInt32(data,30);
@@ -185,14 +196,7 @@ public class ServerUDP : MonoBehaviour {
 							rightShoePressureData[6] = ToInt32(data,78);
 							
 					
-							//takes the 4th and 5th bytes and converts them to a 2 byte int
-							rightShoeProximityData[0] = ToInt16(data,4);
-							rightShoeProximityData[1] = ToInt16(data,16);
-							rightShoeProximityData[2] = ToInt16(data,28);
-							rightShoeProximityData[3] = ToInt16(data,40);
-							rightShoeProximityData[4] = ToInt16(data,52);
-							rightShoeProximityData[5] = ToInt16(data,64);
-							rightShoeProximityData[6] = ToInt16(data,76);
+
 							// [0] - 24 header
 							// [3] - valve state
 							// [4] - 16 prox. 1
@@ -253,6 +257,15 @@ public class ServerUDP : MonoBehaviour {
 								leftShoeProximityData[4] = ToInt16(data,52);
 								leftShoeProximityData[5] = ToInt16(data,64);
 								leftShoeProximityData[6] = ToInt16(data,76);
+
+								//takes the 6th ,7th, 8th and 9th bytes and converts them to a 4 byte int
+								leftShoePressureData[0] = ToInt32(data,6);
+								leftShoePressureData[1] = ToInt32(data,18);
+								leftShoePressureData[2] = ToInt32(data,30);
+								leftShoePressureData[3] = ToInt32(data,42);
+								leftShoePressureData[4] = ToInt32(data,54);
+								leftShoePressureData[5] = ToInt32(data,66);
+								leftShoePressureData[6] = ToInt32(data,78);
 							}
 						}
 					}

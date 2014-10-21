@@ -59,6 +59,42 @@ public class UDPSendPacket : MonoBehaviour {
 	//but it's a bit tricky.
 	int[] trialCommands = new int[] {5,6,7,8,9};
 
+	private enum testingCondition{leftNothing=0, leftInversion=1, leftEversion=2, leftExtension=3, leftFlexion=4,
+		rightNothing=5, rightInversion=6, rightEversion=7, rightExtension=8, rightFlexion=9};
+	///private int [] list = {0,1,2,3,4,5,6,7,8,9};
+	private int [] list = {5,6,7,8,9};//only right foot commands
+	float testTime = 0;
+	bool testing = false;
+	bool testSetup = false;
+	int waitTime = 0;
+	int trialNumber = 0;
+	bool signalSent = false;
+	bool leftFootAir = false;
+	bool rightFootAir = false;
+	bool nextStep = false;
+	float endTrialTime = 0;
+	int numberOfTrials = 1;
+	int numberOfSets = 1;
+
+	string trialData;
+	bool toggleLeftCloseAll = false;
+	bool toggleLeftInversion = false;
+	bool toggleLeftEversion = false;
+	bool toggleLeftExtension = false;
+	bool toggleLeftFlexion = false;
+	
+	bool toggleRightCloseAll = false;
+	bool toggleRightInversion = false;
+	bool toggleRightEversion = false;
+	bool toggleRightExtension = false;
+	bool toggleRightFlexion = false;
+	
+	string notes = "";
+	string statusBar = "Status:  Have the user start walking in place then hit the start test button";
+	string trialFile= "C:\\SmartShoe\\TrialNumber#.txt";
+	string username = "username";
+	bool resetPosition = false;//does nothing yet
+
 	void OnGUI() {
 		//
 		GUI.TextField(new Rect(10, 10, 80, 20), "Left Shoe IP", 25,testStyle);
@@ -270,17 +306,20 @@ public class UDPSendPacket : MonoBehaviour {
 		}
 		username = GUI.TextArea(new Rect(110,300+y,80,20), username);
 
-		if (GUI.Button(new Rect(190,300+y,110,20), ("# of Trials =" + numberOfTrials),tet.button))
-	    {
-			numberOfTrials=(numberOfTrials + 1) % 120;
+		if (GUI.Button(new Rect(190,300+y,110,20), ("# of Sets =" + numberOfSets),tet.button))
+		{
+			numberOfSets=(numberOfSets + 1) % 120;
+			numberOfTrials=numberOfSets * 5;
 //			int iterations = numberOfTrials / 5;
 			//
+			/* old random way
 			list = new int[numberOfTrials];
 			for (int i = 0; i < numberOfTrials; i++)
 			{
 				list[i] = UnityEngine.Random.Range(5,9);
 			}
-			list = createNewList(numberOfTrials,trialCommands);
+			*/
+			list = createNewList(numberOfSets,trialCommands);
 		}
 		if (testing)
 		{
@@ -594,40 +633,6 @@ public class UDPSendPacket : MonoBehaviour {
 
 	}
 
-	private enum testingCondition{leftNothing=0, leftInversion=1, leftEversion=2, leftExtension=3, leftFlexion=4,
-		rightNothing=5, rightInversion=6, rightEversion=7, rightExtension=8, rightFlexion=9};
-	///private int [] list = {0,1,2,3,4,5,6,7,8,9};
-	 private int [] list = {5,6,7,8,9};//only right foot commands
-	float testTime = 0;
-	bool testing = false;
-	bool testSetup = false;
-	int waitTime = 0;
-	int trialNumber = 0;
-	bool signalSent = false;
-	bool leftFootAir = false;
-	bool rightFootAir = false;
-	bool nextStep = false;
-	float endTrialTime = 0;
-	int numberOfTrials = 1;
-
-	string trialData;
-	bool toggleLeftCloseAll = false;
-	bool toggleLeftInversion = false;
-	bool toggleLeftEversion = false;
-	bool toggleLeftExtension = false;
-	bool toggleLeftFlexion = false;
-
-	bool toggleRightCloseAll = false;
-	bool toggleRightInversion = false;
-	bool toggleRightEversion = false;
-	bool toggleRightExtension = false;
-	bool toggleRightFlexion = false;
-
-	string notes = "";
-	string statusBar = "Status:  Have the user start walking in place then hit the start test button";
-	string trialFile= "C:\\SmartShoe\\TrialNumber#.txt";
-	string username = "username";
-	bool resetPosition = false;//does nothing yet
 
 
 	public bool getResetPosition()

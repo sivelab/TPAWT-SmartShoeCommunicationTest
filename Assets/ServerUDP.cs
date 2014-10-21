@@ -29,9 +29,9 @@ public class ServerUDP : MonoBehaviour {
 		leftShoePressureData = new float[7];
 		rightShoePressureData = new float[7];
 		/*
-		byte[] test = new Byte[]{129,255,16,8};
+		byte[] test = new Byte[]{127,127,127,127};
 		//int test2 = ToInt32(test,0);
-		bool test2 = isSet(test, 0);
+		bool test2 = isSet(test, 31);
 		Debug.Log("test: " + test2);
 */
    }	
@@ -162,7 +162,7 @@ public class ServerUDP : MonoBehaviour {
 				{
 					Debug.Log (i+" "+data[i]);
 				}
-				if (isSet(data, 24))//check the bit for which shoe, if true it's right foot
+				if (isSet(data, 31))//check the bit for which shoe, if true it's right foot
 				{
 					//right shoe
 					//Debug.Log("RIGHT SHOE!");
@@ -174,6 +174,7 @@ public class ServerUDP : MonoBehaviour {
 							//takes the 4th byte received and converts it to a string of 8 values
 							string testStr = System.Convert.ToString(data[3],2);
 							testStr = testStr.PadLeft(8,'0');
+							rightShoeValveStatus = testStr.Substring(1);
 							Debug.Log ("first bit: " + testStr[0] + " wholething: " + testStr);
 							rightShoePressureData[0] = ToInt32(data,6);
 							rightShoePressureData[1] = ToInt32(data,18);
@@ -183,9 +184,7 @@ public class ServerUDP : MonoBehaviour {
 							rightShoePressureData[5] = ToInt32(data,66);
 							rightShoePressureData[6] = ToInt32(data,78);
 							
-							
-							debugString = "";
-							rightShoeValveStatus = testStr.Substring(1);
+					
 							//takes the 4th and 5th bytes and converts them to a 2 byte int
 							rightShoeProximityData[0] = ToInt16(data,4);
 							rightShoeProximityData[1] = ToInt16(data,16);
@@ -228,12 +227,8 @@ public class ServerUDP : MonoBehaviour {
 							// [76] - 16 prox. 1
 							// [78] - 32 pres. 1
 							//6 bytes acc
-							//85 bytes totes
-							/*
+							//85 bytes total
 
-							*/
-							//if the first bit is 1, it is the right foot
-							//else//right
 						}
 
 					}

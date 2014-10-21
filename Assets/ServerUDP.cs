@@ -162,7 +162,7 @@ public class ServerUDP : MonoBehaviour {
 				{
 					Debug.Log (i+" "+data[i]);
 				}
-				if (isSet(data, 25))//check the bit for which shoe, if true it's right foot
+				if (isSet(data, 24))//check the bit for which shoe, if true it's right foot
 				{
 					//right shoe
 					//Debug.Log("RIGHT SHOE!");
@@ -174,7 +174,6 @@ public class ServerUDP : MonoBehaviour {
 							//takes the 4th byte received and converts it to a string of 8 values
 							string testStr = System.Convert.ToString(data[3],2);
 							testStr = testStr.PadLeft(8,'0');
-							//if the first bit is 0, it is the left foot
 							Debug.Log ("first bit: " + testStr[0] + " wholething: " + testStr);
 							rightShoePressureData[0] = ToInt32(data,6);
 							rightShoePressureData[1] = ToInt32(data,18);

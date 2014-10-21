@@ -12,7 +12,6 @@ public class Grapher : MonoBehaviour {
 	public GUIStyle testStyles;
 	private float lastTime=0;
 	public int shoeValve = -1;//must set in editor , 0-6 for left foot,  7-13 for right foot
-	private string debugString;
 	// Use this for initialization
 	void Start () {
 		CreatePoints();
@@ -47,6 +46,7 @@ public class Grapher : MonoBehaviour {
 		float newData = 0;
 		if (shoeValve > -1 && shoeValve< 7) // left foot
 		{
+
 			newData = ((SUDP.leftShoeProximityData[shoeValve] - 2000) / 80000);
 		}
 		else if (shoeValve > 6 && shoeValve < 14) //right foot
@@ -70,7 +70,6 @@ public class Grapher : MonoBehaviour {
 	}
 	void OnGUI(){
 		GUI.Button(new Rect(580, 315, 20, 20), "Shoe Proximity Data  (left,  right)",testStyles);
-		GUI.Button(new Rect(580, 335, 20, 20), debugString,testStyles);
 
 		for (int i = 0; i < 7; i++)
 		{

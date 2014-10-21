@@ -27,12 +27,16 @@ public class ServerUDP : MonoBehaviour {
 		port = 2050;
 		leftShoeProximityData = new float[7];
 		rightShoeProximityData = new float[7];
-
-		
+		/*
+		byte[] test = new Byte[]{16,8};
+		short test2 = ToInt16(test,0);
+		Debug.Log("test: " + test2);
+		*/
    }	
 	
 	void startServer()
 	{
+
 		if (!serverStarted)
 		{
 			receiveThread = new Thread(new ThreadStart(ReceiveData));
@@ -211,21 +215,13 @@ public class ServerUDP : MonoBehaviour {
 						{
 							leftShoeValveStatus = testStr.Substring(1);
 							//takes the 4th and 5th bytes and converts them to a 2 byte int
-							leftShoeProximity = BitConverter.ToInt16(data,4).ToString();
-
-							leftShoeProximityData[0]=(Convert.ToInt16(leftShoeProximity));
-							leftShoeProximity = BitConverter.ToInt16(data,16).ToString();
-							leftShoeProximityData[1]=(Convert.ToInt16(leftShoeProximity));
-							leftShoeProximity = BitConverter.ToInt16(data,28).ToString();
-							leftShoeProximityData[2]=(Convert.ToInt16(leftShoeProximity));
-							leftShoeProximity = BitConverter.ToInt16(data,40).ToString();
-							leftShoeProximityData[3]=(Convert.ToInt16(leftShoeProximity));
-							leftShoeProximity = BitConverter.ToInt16(data,52).ToString();
-							leftShoeProximityData[4]=(Convert.ToInt16(leftShoeProximity));
-							leftShoeProximity = BitConverter.ToInt16(data,64).ToString();
-							leftShoeProximityData[5]=(Convert.ToInt16(leftShoeProximity));
-							leftShoeProximity = BitConverter.ToInt16(data,76).ToString();
-							leftShoeProximityData[6]=(Convert.ToInt16(leftShoeProximity));
+							leftShoeProximityData[0] = ToInt16(data,4);
+							leftShoeProximityData[1] = ToInt16(data,16);
+							leftShoeProximityData[2] = ToInt16(data,28);
+							leftShoeProximityData[3] = ToInt16(data,40);
+							leftShoeProximityData[4] = ToInt16(data,52);
+							leftShoeProximityData[5] = ToInt16(data,64);
+							leftShoeProximityData[6] = ToInt16(data,76);
 						}
 						//if the first bit is 1, it is the right foot
 						else//right
@@ -233,27 +229,17 @@ public class ServerUDP : MonoBehaviour {
 							debugString = "";
 							rightShoeValveStatus = testStr.Substring(1);
 							//takes the 4th and 5th bytes and converts them to a 2 byte int
-							rightShoeProximity = BitConverter.ToInt16(data,4).ToString();
-							debugString += "1 : " + rightShoeProximity;
-							rightShoeProximityData[0]=(Convert.ToInt16(rightShoeProximity));
-							rightShoeProximity = BitConverter.ToInt16(data,16).ToString();
-							debugString += "2 : " + rightShoeProximity;
-							rightShoeProximityData[1]=(Convert.ToInt16(rightShoeProximity));
-							rightShoeProximity = BitConverter.ToInt16(data,28).ToString();
-							debugString += "3 : " + rightShoeProximity;
-							rightShoeProximityData[2]=(Convert.ToInt16(rightShoeProximity));
-							rightShoeProximity = BitConverter.ToInt16(data,40).ToString();
-							debugString += "4 : " + rightShoeProximity;
-							rightShoeProximityData[3]=(Convert.ToInt16(rightShoeProximity));
-							rightShoeProximity = BitConverter.ToInt16(data,52).ToString();
-							debugString += "5 : " + rightShoeProximity;
-							rightShoeProximityData[4]=(Convert.ToInt16(rightShoeProximity));
-							rightShoeProximity = BitConverter.ToInt16(data,64).ToString();
-							debugString += "6 : " + rightShoeProximity;
-							rightShoeProximityData[5]=(Convert.ToInt16(rightShoeProximity));
-							rightShoeProximity = BitConverter.ToInt16(data,76).ToString();
-							debugString += "7 : " + rightShoeProximity;
-							rightShoeProximityData[6]=(Convert.ToInt16(rightShoeProximity));
+							rightShoeProximityData[0] = ToInt16(data,4);
+							rightShoeProximityData[1] = ToInt16(data,16);
+							rightShoeProximityData[2] = ToInt16(data,28);
+							rightShoeProximityData[3] = ToInt16(data,40);
+							rightShoeProximityData[4] = ToInt16(data,52);
+							rightShoeProximityData[5] = ToInt16(data,64);
+							rightShoeProximityData[6] = ToInt16(data,76);
+							for (int i = 0; i < rightShoeProximityData.Length; i++)
+							{
+								debugString+= " " + i + " : " + rightShoeProximityData[i]; 
+							}
 						}
 					}
 
@@ -360,5 +346,32 @@ public class ServerUDP : MonoBehaviour {
 		if(client != null)
 		client.Close(); 
 	} 
-	
+
+	public static short ToInt16(byte[] value, int startIndex)
+	{
+		short result = 0;
+		result = (short) value[startIndex];
+		result = (short)(result << 8);
+		result += (short) value[startIndex + 1];
+		return result;
+		/*
+		if (startIndex % 2 == 0)
+		{
+			result = *(short*)(&value [startIndex]);
+		}
+		else
+		{
+			if (BitConverter.IsLittleEndian)
+			{
+				result = (short)((int)(*(&value [startIndex])) | (int)(&value [startIndex]) [(IntPtr)1 / 1] << 8);
+			}
+			else
+			{
+				result = (short)((int)(*(&value [startIndex])) << 8 | (int)(&value [startIndex]) [(IntPtr)1 / 1]);
+			}
+		}
+		return result;
+		*/
+	}
+
 }

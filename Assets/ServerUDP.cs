@@ -11,6 +11,8 @@ using System.Collections.Generic;
 public class ServerUDP : MonoBehaviour {
 
 	public UDPSendPacket udpSendPacket;
+	string leftShoeLastCommand = "";
+	string rightShoeLastCommand = "";
 	Thread receiveThread;
 	UdpClient client;
 	public int port;
@@ -18,10 +20,7 @@ public class ServerUDP : MonoBehaviour {
 	private string stringData = "Waiting to receive data";
 	string leftShoeValveStatus="-------";//0 = valve 1, 1 = valve 2, etc
 	string rightShoeValveStatus="-------";//0 = valve 1, 1 = valve 2, etc
-	string leftShoeProximity="-------";
-	string rightShoeProximity="-------";
-	string leftShoePressure="-------";
-	string rightShoePressure="-------";
+
 	// Use this for initialization
 	void Start () {
 		port = 2050;
@@ -29,11 +28,12 @@ public class ServerUDP : MonoBehaviour {
 		rightShoeProximityData = new float[7];
 		leftShoePressureData = new float[7];
 		rightShoePressureData = new float[7];
-
-		byte[] test = new Byte[]{0,0,16,8};
-		int test2 = ToInt32(test,0);
+		/*
+		byte[] test = new Byte[]{129,255,16,8};
+		//int test2 = ToInt32(test,0);
+		bool test2 = isSet(test, 0);
 		Debug.Log("test: " + test2);
-
+*/
    }	
 	
 	void startServer()
@@ -127,14 +127,16 @@ public class ServerUDP : MonoBehaviour {
 
 	
 		GUI.TextField(new Rect(450, 205, 100, 20), "right Valve: "+rightShoeValveStatus,testStyles);
-		GUI.TextField(new Rect(450, 225, 100, 20), "packets received: "+packetsReceived,testStyles);
+		GUI.TextField(new Rect(450, 245, 100, 20), "packets received right: "+packetsReceivedRight,testStyles);
+		GUI.TextField(new Rect(450, 225, 100, 20), "packets received  left: "+packetsReceivedLeft,testStyles);
 		
 		
 		debugString = GUI.TextField(new Rect(580, 335, 20, 20), debugString,testStyles);
 	}
 
 	//float pastTime = 0;
-	private int packetsReceived = 0;
+	private int packetsReceivedRight = 0;
+	private int packetsReceivedLeft = 0;
 	private int leftShoeProximityIterator=0;
 	public  float[] leftShoeProximityData;
 	public  float[] rightShoeProximityData;
@@ -150,7 +152,6 @@ public class ServerUDP : MonoBehaviour {
 				IPEndPoint anyIP = new IPEndPoint (IPAddress.Any, 0);
       			byte[] data = new byte[81];
 				data = client.Receive(ref anyIP);
-				packetsReceived++;
 
 				stringData = ByteArrayToString(data);//for data saving purposes
 				//test to see if the split work
@@ -161,67 +162,20 @@ public class ServerUDP : MonoBehaviour {
 				{
 					Debug.Log (i+" "+data[i]);
 				}
-				if (data.Length > 15 && (packetsReceived%5 == 0))//only process every fifth packet
+				if (isSet(data, 25))//check the bit for which shoe, if true it's right foot
 				{
-					if (data[0]+data[1]+data[2] ==381)//7f+7f+7f
+					//right shoe
+					//Debug.Log("RIGHT SHOE!");
+					packetsReceivedRight++;
+					if (data.Length > 15 && (packetsReceivedRight%5 == 0))//only process every fifth packet
 					{
-						//takes the 4th byte received and converts it to a string of 8 values
-						string testStr = System.Convert.ToString(data[3],2);
-						testStr = testStr.PadLeft(8,'0');
-						//if the first bit is 0, it is the left foot
-						Debug.Log ("first bit: " + testStr[0] + " wholething: " + testStr);
-						// [0] - 24 header
-						// [3] - valve state
-						// [4] - 16 prox. 1
-						// [6] - 32 pres. 1
-						//6 bytes acc
-
-						// [16] - 16 prox. 1
-						// [18] - 32 pres. 1
-						//6 bytes acc
-
-
-						// [28] - 16 prox. 1
-						// [30] - 32 pres. 1
-						//6 bytes acc
-
-
-						// [40] - 16 prox. 1
-						// [42] - 32 pres. 1
-						//6 bytes acc
-
-
-						// [52] - 16 prox. 1
-						// [54] - 32 pres. 1
-						//6 bytes acc
-
-
-						// [64] - 16 prox. 1
-						// [66] - 32 pres. 1
-						//6 bytes acc
-
-
-						// [76] - 16 prox. 1
-						// [78] - 32 pres. 1
-						//6 bytes acc
-						//85 bytes totes
-						
-						if (testStr[0] == '0')//left
+						if (data[0]+data[1]+data[2] ==381)//7f+7f+7f
 						{
-							leftShoeValveStatus = testStr.Substring(1);
-							//takes the 4th and 5th bytes and converts them to a 2 byte int
-							leftShoeProximityData[0] = ToInt16(data,4);
-							leftShoeProximityData[1] = ToInt16(data,16);
-							leftShoeProximityData[2] = ToInt16(data,28);
-							leftShoeProximityData[3] = ToInt16(data,40);
-							leftShoeProximityData[4] = ToInt16(data,52);
-							leftShoeProximityData[5] = ToInt16(data,64);
-							leftShoeProximityData[6] = ToInt16(data,76);
-						}
-						//if the first bit is 1, it is the right foot
-						else//right
-						{
-
+							//takes the 4th byte received and converts it to a string of 8 values
+							string testStr = System.Convert.ToString(data[3],2);
+							testStr = testStr.PadLeft(8,'0');
+							//if the first bit is 0, it is the left foot
+							Debug.Log ("first bit: " + testStr[0] + " wholething: " + testStr);
 							rightShoePressureData[0] = ToInt32(data,6);
 							rightShoePressureData[1] = ToInt32(data,18);
 							rightShoePressureData[2] = ToInt32(data,30);
@@ -229,8 +183,8 @@ public class ServerUDP : MonoBehaviour {
 							rightShoePressureData[4] = ToInt32(data,54);
 							rightShoePressureData[5] = ToInt32(data,66);
 							rightShoePressureData[6] = ToInt32(data,78);
-
-
+							
+							
 							debugString = "";
 							rightShoeValveStatus = testStr.Substring(1);
 							//takes the 4th and 5th bytes and converts them to a 2 byte int
@@ -241,13 +195,74 @@ public class ServerUDP : MonoBehaviour {
 							rightShoeProximityData[4] = ToInt16(data,52);
 							rightShoeProximityData[5] = ToInt16(data,64);
 							rightShoeProximityData[6] = ToInt16(data,76);
+							// [0] - 24 header
+							// [3] - valve state
+							// [4] - 16 prox. 1
+							// [6] - 32 pres. 1
+							//6 bytes acc
 
+							// [16] - 16 prox. 1
+							// [18] - 32 pres. 1
+							//6 bytes acc
+
+
+							// [28] - 16 prox. 1
+							// [30] - 32 pres. 1
+							//6 bytes acc
+
+
+							// [40] - 16 prox. 1
+							// [42] - 32 pres. 1
+							//6 bytes acc
+
+
+							// [52] - 16 prox. 1
+							// [54] - 32 pres. 1
+							//6 bytes acc
+
+
+							// [64] - 16 prox. 1
+							// [66] - 32 pres. 1
+							//6 bytes acc
+
+
+							// [76] - 16 prox. 1
+							// [78] - 32 pres. 1
+							//6 bytes acc
+							//85 bytes totes
+							/*
+
+							*/
+							//if the first bit is 1, it is the right foot
+							//else//right
+						}
+
+					}
+				}
+				else //left shoe
+				{
+					packetsReceivedLeft++;
+					if (data.Length > 15 && (packetsReceivedLeft%5 == 0))//only process every fifth packet
+					{
+						if (data[0]+data[1]+data[2] ==381)//7f+7f+7f
+						{
+							string testStr = System.Convert.ToString(data[3],2);
+							testStr = testStr.PadLeft(8,'0');
+							if (testStr[0] == '0')//left
+							{
+								leftShoeValveStatus = testStr.Substring(1);
+								//takes the 4th and 5th bytes and converts them to a 2 byte int
+								leftShoeProximityData[0] = ToInt16(data,4);
+								leftShoeProximityData[1] = ToInt16(data,16);
+								leftShoeProximityData[2] = ToInt16(data,28);
+								leftShoeProximityData[3] = ToInt16(data,40);
+								leftShoeProximityData[4] = ToInt16(data,52);
+								leftShoeProximityData[5] = ToInt16(data,64);
+								leftShoeProximityData[6] = ToInt16(data,76);
+							}
 						}
 					}
-
 				}
-
-
 				/*
 				for (int i =0; i < stringArray.Length; i ++)
 				{
@@ -348,7 +363,8 @@ public class ServerUDP : MonoBehaviour {
 		if(client != null)
 		client.Close(); 
 	} 
-
+	//converts a byte array at position start index and the next byte after it into a short. 
+	//Assumes data is big endian
 	public static short ToInt16(byte[] value, int startIndex)
 	{
 		short result = 0;
@@ -357,6 +373,8 @@ public class ServerUDP : MonoBehaviour {
 		result += (short) value[startIndex + 1];
 		return result;
 	}
+	//converts a byte array at position start index and the next 3 bytes after it into an int. 
+	//Assumes data is big endian
 	public static int ToInt32(byte[] value, int startIndex)
 	{
 		int result = 0;
@@ -366,7 +384,15 @@ public class ServerUDP : MonoBehaviour {
 		result = (int)(result << 8);
 		result += (int) value[startIndex + 2];
 		result = (int)(result << 8);
+
 		result += (int) value[startIndex + 3];
 		return result;
+	}
+
+	public bool isSet(byte[] arr, int bit) {
+		int index = bit / 8;  // Get the index of the array for the byte with this bit
+		int bitPosition = bit % 8;  // Position of this bit in a byte
+		
+		return (arr[index] >> bitPosition & 1) == 1;
 	}
 }

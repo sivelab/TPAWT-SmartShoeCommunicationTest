@@ -76,7 +76,7 @@ public class Grapher : MonoBehaviour {
 	}
 	void OnGUI(){
 		GUI.Button(new Rect(580, 315, 20, 20), "Shoe Pressure Data (left) Shoe Proximity Data  (right)",testStyles);
-
+		//testing git
 		for (int i = 0; i < 7; i++)
 		{
 			GUI.Button(new Rect(450, 380+i*60, 20, 20), (i+1).ToString(),testStyles);

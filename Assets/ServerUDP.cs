@@ -28,12 +28,12 @@ public class ServerUDP : MonoBehaviour {
 		rightShoeProximityData = new float[7];
 		leftShoePressureData = new float[7];
 		rightShoePressureData = new float[7];
-
+		/*
 		byte[] test = new Byte[]{127,127,127,127};
 		//int test2 = ToInt32(test,0);
 		bool test2 = isSet(test, 25);
 		Debug.Log("test: " + test2);
-
+		*/
    }	
 	
 	void startServer()
@@ -50,6 +50,8 @@ public class ServerUDP : MonoBehaviour {
 	// Update is called once per frame
 	public float globalTime;
 	private string debugString = "Debug String";
+	private float metronomeTiming = 1;
+	private float lastMetronome=0;
 	void Update () {
 		globalTime = Time.time;
 		testing = udpSendPacket.getTesting();
@@ -57,6 +59,11 @@ public class ServerUDP : MonoBehaviour {
 		if (testing&&!serverStarted)
 		{
 			startServer();
+		}
+		if(metronome && !audio.isPlaying && (Time.time - lastMetronome) > metronomeTiming)
+		{
+			lastMetronome = Time.time;
+			MyPlayOneShot(clip);
 		}
 		//guiText.text = stringData;
 
@@ -87,7 +94,20 @@ public class ServerUDP : MonoBehaviour {
 	private bool testing = false;
 	private int trialNumber = -1;
 	private string serverStatus = "";
+	public bool metronome = true;
+	public AudioClip clip;
+	private float clipEnd; // declare this outside any function
+
+	void MyPlayOneShot(AudioClip sound){
+		if (Time.time > clipEnd){ // if previous clip not playing anymore...
+			audio.PlayOneShot(sound); // play the new one...
+			clipEnd = Time.time + sound.length; // and calculate its end time
+		}
+	}
 	void OnGUI(){
+
+
+
 		GUI.TextField(new Rect(450, 10, 100, 20), "Receiving Port", 25,testStyles);
 		port = Convert.ToInt32(GUI.TextField(new Rect(550, 10, 60, 20), port.ToString(), 25));
 		if (GUI.Button(new Rect(450, 30, 100, 20), "Start Server"))
@@ -132,9 +152,55 @@ public class ServerUDP : MonoBehaviour {
 		
 		
 		debugString = GUI.TextField(new Rect(580, 335, 20, 20), debugString,testStyles);
+
+		if (GUI.Button(new Rect(450, 325, 100, 20), ("Shoe: " + shoeString)))
+		{
+			if (shoe == shoeSide.left)
+			{
+				shoe = shoeSide.right;
+				shoeString = "right";
+			}
+			else
+			{
+				shoe = shoeSide.left;
+				shoeString = "left";
+			}
+		}
+		
+		GUI.Button(new Rect(580, 315, 20, 20), "Shoe Pressure Data ---- Shoe Proximity Data ",testStyles);
+		
+		//testing git
+		for (int i = 0; i < 7; i++)
+		{
+			GUI.Button(new Rect(450, 380+i*60, 20, 20), (i+1).ToString(),testStyles);
+		}
+		for (int i = 0; i < 7; i++)
+		{
+			GUI.Button(new Rect(780, 380+i*60, 20, 20), (i+1).ToString(),testStyles);
+		}
+
+		if (GUI.Button(new Rect(10,620,150,20), "Metronome : " + metronome))
+		{
+			metronome = !metronome;
+		}
+		metronomeTimingString = GUI.TextArea(new Rect(160,620,50,20), metronomeTimingString);
+		GUI.TextArea(new Rect(210,620,50,20), "HZ",testStyles);
+		if (metronomeTimingString != null)
+		{
+			try
+			{
+				metronomeTiming = 1.0f / float.Parse(metronomeTimingString);
+			}
+			catch (Exception e )
+			{
+				Debug.LogError(e);
+			}
+		}
+
 	}
 
 	//float pastTime = 0;
+	private string metronomeTimingString = "1";
 	private int packetsReceivedRight = 0;
 	private int packetsReceivedLeft = 0;
 	private int leftShoeProximityIterator=0;
@@ -142,6 +208,9 @@ public class ServerUDP : MonoBehaviour {
 	public  float[] rightShoeProximityData;
 	public  float[] leftShoePressureData;
 	public  float[] rightShoePressureData;
+	public enum shoeSide{left=1,right=2};
+	public shoeSide shoe = shoeSide.right;
+	private string shoeString = "right";
 	private void ReceiveData()
 	{
 		client = new UdpClient(port);

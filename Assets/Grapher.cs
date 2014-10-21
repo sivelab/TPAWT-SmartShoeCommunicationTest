@@ -44,28 +44,57 @@ public class Grapher : MonoBehaviour {
 		//points[resolution-1].position = new Vector3((resolution-1)*increment,0f,d);
 		//float newData = points[resolution-1].position.z + Random.Range(-.01f,.01f);
 		float newData = 0;
-		if (shoeValve > -1 && shoeValve< 7) // left foot
+		if (SUDP.shoe == ServerUDP.shoeSide.left)
 		{
-			//70,000 - 150,000
-			// 0 - .10
-			// x - 70000  =   0 - 80,0000
-			// 800,000/x = .10
-			//x = 800,000
-			newData = ((SUDP.rightShoePressureData[shoeValve] - 70000) / 800000);
-		}
-		else if (shoeValve > 6 && shoeValve < 14) //right foot
-		{
-			newData = ((SUDP.rightShoeProximityData[shoeValve-7] - 2000) / 80000);
-			//2,000-10,000 >>
-			//0    - .10
-			//x-2000  = 0-8000
-			//x/80000  8000/.10=x
+			if (shoeValve > -1 && shoeValve< 7) // left foot
+			{
+				//70,000 - 150,000
+				// 0 - .10
+				// x - 70000  =   0 - 80,0000
+				// 800,000/x = .10
+				//x = 800,000
+				newData = ((SUDP.leftShoePressureData[shoeValve] - 70000) / 800000);
+			}
+			else if (shoeValve > 6 && shoeValve < 14) //right foot
+			{
+				newData = ((SUDP.leftShoeProximityData[shoeValve-7] - 2000) / 80000);
+				//2,000-10,000 >>
+				//0    - .10
+				//x-2000  = 0-8000
+				//x/80000  8000/.10=x
+				
+			}
+			else
+			{
+				Debug.LogError("Invalid shoeValve state, set  in editor");
+			}
 
 		}
-		else
+		else//shoe is right foot
 		{
-			Debug.LogError("Invalid shoeValve state, set  in editor");
-			return;
+			if (shoeValve > -1 && shoeValve< 7) // left foot
+			{
+				//70,000 - 150,000
+				// 0 - .10
+				// x - 70000  =   0 - 80,0000
+				// 800,000/x = .10
+				//x = 800,000
+				newData = ((SUDP.rightShoePressureData[shoeValve] - 70000) / 800000);
+			}
+			else if (shoeValve > 6 && shoeValve < 14) //right foot
+			{
+				newData = ((SUDP.rightShoeProximityData[shoeValve-7] - 2000) / 80000);
+				//2,000-10,000 >>
+				//0    - .10
+				//x-2000  = 0-8000
+				//x/80000  8000/.10=x
+
+			}
+			else
+			{
+				Debug.LogError("Invalid shoeValve state, set  in editor");
+				return;
+			}
 		}
 		if (newData > 0.10f)
 			newData = .10f;
@@ -74,20 +103,18 @@ public class Grapher : MonoBehaviour {
 		points[resolution-1].position = new Vector3((resolution-1)*increment,0f,newData);
 	
 	}
+	
+
 	void OnGUI(){
-		GUI.Button(new Rect(580, 315, 20, 20), "Shoe Pressure Data (left) Shoe Proximity Data  (right)",testStyles);
-		//testing git
-		for (int i = 0; i < 7; i++)
-		{
-			GUI.Button(new Rect(450, 380+i*60, 20, 20), (i+1).ToString(),testStyles);
-		}
-		for (int i = 0; i < 7; i++)
-		{
-			GUI.Button(new Rect(780, 380+i*60, 20, 20), (i+1).ToString(),testStyles);
-		}
+
+
 	}
+
 	// Update is called once per frame
 	void Update () {
+
+
+
 		if (currentResolution != resolution) {
 			CreatePoints();
 		}

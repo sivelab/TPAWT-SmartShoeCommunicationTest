@@ -1,11 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\ServerUDP.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Grapher.cs">
     <Files>
-      <File FileName="Assets\ServerUDP.cs" Line="13" Column="30" />
-      <File FileName="Assets\Grapher.cs" Line="103" Column="1" />
+      <File FileName="Assets\ServerUDP.cs" Line="147" Column="8" />
+      <File FileName="Assets\Grapher.cs" Line="79" Column="4" />
       <File FileName="Assets\Navigation.cs" Line="462" Column="5" />
-      <File FileName="Assets\UDPSendPacket.cs" Line="709" Column="23" />
+      <File FileName="Assets\UDPSendPacket.cs" Line="1029" Column="20" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

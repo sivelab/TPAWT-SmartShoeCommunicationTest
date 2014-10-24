@@ -19,7 +19,6 @@ public class UDPSendPacket : MonoBehaviour {
 	public string IPright;
 	private float time;
 	public GUISkin skin;
-	public ServerUDP sUDP;
 	// Use this for initialization 
 	void Start () {
 		//send bytes will be used
@@ -73,7 +72,7 @@ public class UDPSendPacket : MonoBehaviour {
 	bool rightFootAir = false;
 	bool nextStep = false;
 	float endTrialTime = 0;
-	int numberOfTrials = 1;
+	int numberOfTrials = 5;
 	int numberOfSets = 1;
 
 	string trialData;
@@ -280,7 +279,7 @@ public class UDPSendPacket : MonoBehaviour {
 			}
 			else
 			{
-				reshuffle(list);
+				//reshuffle(list);
 				waitTime = UnityEngine.Random.Range(3,6);
 				trialNumber=0;
 				endTrialTime = 0;

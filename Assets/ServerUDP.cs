@@ -60,6 +60,14 @@ public class ServerUDP : MonoBehaviour {
 		{
 			startServer();
 		}
+		if (udpSendPacket.getTesting())
+		{
+			metronome = true;
+		}
+		else
+		{
+			metronome = false;
+		}
 		if(metronome && !audio.isPlaying && (Time.time - lastMetronome) > metronomeTiming)
 		{
 			lastMetronome = Time.time;

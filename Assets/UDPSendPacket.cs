@@ -52,7 +52,7 @@ public class UDPSendPacket : MonoBehaviour {
 	private Dictionary<int, bool> leftFootValveStatus;//true = open, false = close
 	private Dictionary<int, bool> rightFootValveStatus;//true = open, false = close
 	public GUIContent shoeGUIContent;
-	private enum shoeSide{left=1,right=2};
+	public enum shoeSide{left=1,right=2};
 	public GUISkin tet;
 	//edit this with the trials you want to change.  TODO: Working on way to make this editable in the GUI,
 	//but it's a bit tricky.
@@ -1016,6 +1016,37 @@ public class UDPSendPacket : MonoBehaviour {
 	private  int cycle = 0;
 	private bool everyOther = false;
 	//0 is left shoe, 1 is right shoe
+	public string shoeValve(shoeSide sSide)
+	{
+		//returns a string with the valve state
+		string valveStatus = "";
+		for (int i = 1; i < 8; i ++)
+		{
+			if (sSide == shoeSide.left)
+			{
+				if (leftFootValveStatus[i])
+				{
+					valveStatus = valveStatus + 1;
+				}
+				else
+				{
+					valveStatus = valveStatus + 0;
+				}
+			}
+			else
+			{
+				if (rightFootValveStatus[i])
+				{
+					valveStatus = valveStatus + 1;
+				}
+				else
+				{
+					valveStatus = valveStatus + 0;
+				}
+			}
+		}
+		return valveStatus;
+	}
 	public  void cycleShoeStates(int cycleState, int whichShoe)
 	{
 		shoeSide sSide;

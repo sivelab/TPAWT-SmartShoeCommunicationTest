@@ -73,6 +73,24 @@ public class ServerUDP : MonoBehaviour {
 			lastMetronome = Time.time;
 			MyPlayOneShot(clip);
 		}
+		string leftShoeValveSent = udpSendPacket.shoeValve(UDPSendPacket.shoeSide.left);
+		string rightShoeValveSent = udpSendPacket.shoeValve (UDPSendPacket.shoeSide.right);
+		//if the last signal sent to the shoe isn't the same as the valve state
+		// tell us immediately
+		//7654321
+		if (leftShoeValveSent.CompareTo(leftShoeValveStatus)==0)
+		    leftShoeCorrectValveState = true;
+		else
+			leftShoeCorrectValveState = false;
+
+		if (rightShoeValveSent.CompareTo(rightShoeValveStatus)==0)
+			rightShoeCorrectValveState = true;
+		else
+			rightShoeCorrectValveState = false;
+
+		Debug.Log (leftShoeValveStatus + " :lfvstatus:lfvsent: " + leftShoeValveSent);
+
+
 		//guiText.text = stringData;
 
 		
@@ -205,6 +223,17 @@ public class ServerUDP : MonoBehaviour {
 			}
 		}
 
+		if (leftShoeCorrectValveState)
+			GUI.color = Color.green;
+		else
+			GUI.color = Color.red;
+		GUI.TextField(new Rect(580, 185, 100, 20), "Correct Left?");
+		if (rightShoeCorrectValveState)
+			GUI.color = Color.green;
+		else
+			GUI.color = Color.red;
+		GUI.TextField(new Rect(580, 205, 100, 20), "Correct Right? ");
+		GUI.color = Color.black;
 	}
 
 	//float pastTime = 0;
@@ -219,6 +248,8 @@ public class ServerUDP : MonoBehaviour {
 	public enum shoeSide{left=1,right=2};
 	public shoeSide shoe = shoeSide.right;
 	private string shoeString = "right";
+	private bool leftShoeCorrectValveState = false;
+	private bool rightShoeCorrectValveState = false;
 	private void ReceiveData()
 	{
 		client = new UdpClient(port);

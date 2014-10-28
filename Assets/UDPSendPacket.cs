@@ -1012,6 +1012,68 @@ public class UDPSendPacket : MonoBehaviour {
 			udpClient.Send(sendLargeByte, sendLargeByte.Length, remoteEndPointRight);
 		}
 	}
+	//uses rightfootstatus and leftfootstatus dictionarys to compile the openarray/closearray
+	//to resend valve status to the shoe in case if dropped packets
+	public void resendValveState(shoeSide sSide)
+	{
+		int openAmount = 0;
+		int closeAmount = 0;
+		for (int i = 1; i < 8; i++)
+		{
+			if (sSide == shoeSide.left)
+			{
+				if(leftFootValveStatus[i])
+					openAmount++;
+				else
+					closeAmount++;
+			}
+			else
+			{
+				if(rightFootValveStatus[i])
+					openAmount++;
+				else
+					closeAmount++;
+			}
+		}
+		int[] openArray = new int[openAmount];
+		int[] closeArray = new int[closeAmount];
+		//7654321
+		int openIter = 0;
+		int closeIter = 0;
+		for (int i = 1; i < 8; i++)
+		{
+			if (sSide == shoeSide.left)
+			{
+				if(leftFootValveStatus[i])
+				{
+					openArray[openIter] = i;
+					openIter++;
+				}
+				else
+				{
+					closeArray[closeIter] = i;
+					closeIter++;
+				}
+			}
+			else
+			{
+				if(rightFootValveStatus[i])
+				{
+					openArray[openIter] = i;
+					openIter++;
+				}
+				else
+				{
+					closeArray[closeIter] = i;
+					closeIter++;
+				}
+			}
+		}
+
+		openValvecloseValve(openArray,closeArray,sSide);
+	}
+
+
 
 	private  int cycle = 0;
 	private bool everyOther = false;

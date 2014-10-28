@@ -18,8 +18,8 @@ public class ServerUDP : MonoBehaviour {
 	public int port;
 	IPEndPoint sender;
 	private string stringData = "Waiting to receive data";
-	string leftShoeValveStatus="-------";//0 = valve 1, 1 = valve 2, etc
-	string rightShoeValveStatus="-------";//0 = valve 1, 1 = valve 2, etc
+	string leftShoeValveStatus="0000000";//0 = valve 1, 1 = valve 2, etc
+	string rightShoeValveStatus="0000000";//0 = valve 1, 1 = valve 2, etc
 
 	// Use this for initialization
 	void Start () {
@@ -90,7 +90,7 @@ public class ServerUDP : MonoBehaviour {
 		else
 			rightShoeCorrectValveState = false;
 
-		Debug.Log (leftShoeValveStatus + " :lfvstatus:lfvsent: " + leftShoeValveSent);
+		//Debug.Log (leftShoeValveStatus + " :lfvstatus:lfvsent: " + leftShoeValveSent);
 
 
 		//guiText.text = stringData;
@@ -224,17 +224,35 @@ public class ServerUDP : MonoBehaviour {
 				Debug.LogError(e);
 			}
 		}
+		if (resendValve)
+			GUI.color = Color.green;
+		else
+		{
+			//resend the command to the shoe to do what is needed
+			GUI.color = Color.red;
+		}
+		if (GUI.Button(new Rect(580,185,140,20), "resendValve : " + resendValve))
+		{
+			resendValve = !resendValve;
+		}
 
 		if (leftShoeCorrectValveState)
 			GUI.color = Color.green;
 		else
+		{
+			//resend the command to the shoe to do what is needed
 			GUI.color = Color.red;
-		GUI.TextField(new Rect(580, 185, 100, 20), "Correct Left?");
+		}
+
+
+		GUI.TextField(new Rect(600, 205, 100, 20), "Correct Left?");
 		if (rightShoeCorrectValveState)
 			GUI.color = Color.green;
 		else
+		{
 			GUI.color = Color.red;
-		GUI.TextField(new Rect(580, 205, 100, 20), "Correct Right? ");
+		}
+		GUI.TextField(new Rect(600, 225, 100, 20), "Correct Right? ");
 		//reset color
 		GUI.color = Color.black;
 
@@ -470,6 +488,43 @@ public class ServerUDP : MonoBehaviour {
 			}
 		}
 	}
+	private int leftWrong = 0;
+	private int rightWrong = 0;
+	private bool resendValve = true;
+	public void checkForResend()
+	{
+		if (!resendValve)
+		{
+			return;
+		}
+		if (!leftShoeCorrectValveState)
+		{
+			leftWrong++;
+			//if it is wrong for 2 checks
+			if (leftWrong > 1)
+			{
+				//Debug.Log("resent Message!");
+				leftWrong=0;
+				udpSendPacket.resendValveState(UDPSendPacket.shoeSide.left);
+			}
+		}
+		else
+			leftWrong = 0;
+		if (!rightShoeCorrectValveState)
+		{
+			rightWrong++;
+			//if it is wrong for 2 checks
+			if(rightWrong>1)
+			{
+				//Debug.Log("resent Message!");
+				rightWrong =0;
+				udpSendPacket.resendValveState(UDPSendPacket.shoeSide.right);
+			}
+		}
+		else 
+			rightWrong = 0;
+	}
+
 	public static string ByteArrayToString(byte[] ba)
 	{
 		string hex = BitConverter.ToString(ba);

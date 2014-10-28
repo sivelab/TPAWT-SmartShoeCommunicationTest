@@ -122,6 +122,12 @@ public class Grapher : MonoBehaviour {
 		{
 			MaintainPoints(data);
 			lastTime = Time.time;	
+
+			if (shoeValve == 0)//so it is only done once
+			{
+				//checks to see that the last sent valve state is correct
+				SUDP.checkForResend();
+			}
 		}
 		particleSystem.SetParticles(points, points.Length);
 	

@@ -470,7 +470,7 @@ public class UDPSendPacket : MonoBehaviour {
 				testing = false;
 				return;
 			}
-			Debug.Log (trialData);
+			//Debug.Log (trialData);
 			//write the data to file
 
 			//reset variables for next trial
@@ -600,7 +600,7 @@ public class UDPSendPacket : MonoBehaviour {
 			}
 		}
 		printList(finalList);
-		Debug.Log ("fL.l "+finalList.Length);
+		//Debug.Log ("fL.l "+finalList.Length);
 		return finalList;
 	}
 	//returns true if the two lists are equal
@@ -1197,7 +1197,7 @@ public class UDPSendPacket : MonoBehaviour {
 		{
 			everyOther = true;
 		}
-		Debug.Log(cycle);
+		//Debug.Log(cycle);
 	}
 	
 	//from http://forum.unity3d.com/threads/randomize-array-in-c.86871/

@@ -291,7 +291,7 @@ public class ServerUDP : MonoBehaviour {
 
 				for (int i = 0; i < data.Length; i++)
 				{
-					Debug.Log (i+" "+data[i]);
+					//Debug.Log (i+" "+data[i]);
 				}
 				if (isSet(data, 31))//check the bit for which shoe, if true it's right foot
 				{
@@ -306,7 +306,7 @@ public class ServerUDP : MonoBehaviour {
 							string testStr = System.Convert.ToString(data[3],2);
 							testStr = testStr.PadLeft(8,'0');
 							rightShoeValveStatus = testStr.Substring(1);
-							Debug.Log ("first bit: " + testStr[0] + " wholething: " + testStr);
+							//Debug.Log ("first bit: " + testStr[0] + " wholething: " + testStr);
 							//takes the 4th and 5th bytes and converts them to a 2 byte int
 							rightShoeProximityData[0] = ToInt16(data,4);
 							rightShoeProximityData[1] = ToInt16(data,16);

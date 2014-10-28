@@ -52,6 +52,8 @@ public class ServerUDP : MonoBehaviour {
 	private string debugString = "Debug String";
 	private float metronomeTiming = 1;
 	private float lastMetronome=0;
+	string leftShoeValveSent;
+	string rightShoeValveSent;
 	void Update () {
 		globalTime = Time.time;
 		testing = udpSendPacket.getTesting();
@@ -73,8 +75,8 @@ public class ServerUDP : MonoBehaviour {
 			lastMetronome = Time.time;
 			MyPlayOneShot(clip);
 		}
-		string leftShoeValveSent = udpSendPacket.shoeValve(UDPSendPacket.shoeSide.left);
-		string rightShoeValveSent = udpSendPacket.shoeValve (UDPSendPacket.shoeSide.right);
+		leftShoeValveSent = udpSendPacket.shoeValve(UDPSendPacket.shoeSide.left);
+		rightShoeValveSent = udpSendPacket.shoeValve (UDPSendPacket.shoeSide.right);
 		//if the last signal sent to the shoe isn't the same as the valve state
 		// tell us immediately
 		//7654321
@@ -233,7 +235,10 @@ public class ServerUDP : MonoBehaviour {
 		else
 			GUI.color = Color.red;
 		GUI.TextField(new Rect(580, 205, 100, 20), "Correct Right? ");
+		//reset color
 		GUI.color = Color.black;
+
+		GUI.TextField(new Rect(450,170, 100, 20), (rightShoeValveStatus + " :<-received:sent->: " + rightShoeValveSent),testStyles);
 	}
 
 	//float pastTime = 0;

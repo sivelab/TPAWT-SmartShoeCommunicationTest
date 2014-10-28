@@ -1020,12 +1020,16 @@ public class UDPSendPacket : MonoBehaviour {
 	{
 		//returns a string with the valve state
 		string valveStatus = "";
-		for (int i = 1; i < 8; i ++)
+		for (int i = 7; i > 0; i --)
 		{
+	
+	
+
 			if (sSide == shoeSide.left)
 			{
 				if (leftFootValveStatus[i])
 				{
+					//append to string
 					valveStatus = valveStatus + 1;
 				}
 				else
